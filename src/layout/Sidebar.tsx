@@ -17,7 +17,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
-import { mainNavItems, secondaryNavItems } from "../constants/navigation";
+import { mainNavItems } from "../constants/navigation";
 import type { NavItem } from "../constants/navigation";
 
 interface SidebarProps {
@@ -124,8 +124,6 @@ const Sidebar = ({ mobileOpen, onMobileToggle }: SidebarProps) => {
       </Box>
       <Divider />
       <List>{renderNavItems(mainNavItems)}</List>
-      <Divider />
-      <List>{renderNavItems(secondaryNavItems)}</List>
     </>
   );
 

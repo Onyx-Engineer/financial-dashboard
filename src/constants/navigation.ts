@@ -2,8 +2,6 @@ import {
   Dashboard as DashboardIcon,
   TableChart as TableChartIcon,
   TrendingUp as TrendingUpIcon,
-  Settings as SettingsIcon,
-  Help as HelpIcon,
 } from "@mui/icons-material";
 
 export interface NavItem {
@@ -29,18 +27,5 @@ export const mainNavItems: NavItem[] = [
     path: "/holdings",
     label: "Holdings",
     icon: TableChartIcon,
-  },
-];
-
-export const secondaryNavItems: NavItem[] = [
-  {
-    path: "/settings",
-    label: "Settings",
-    icon: SettingsIcon,
-  },
-  {
-    path: "/help",
-    label: "Help",
-    icon: HelpIcon,
   },
 ];
