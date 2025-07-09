@@ -81,7 +81,7 @@ export const ToastHost: React.FC<ToastHostProps> = ({
   }, [currentNotification]);
 
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
     // Don't auto-close on clickaway to prevent accidental dismissal
