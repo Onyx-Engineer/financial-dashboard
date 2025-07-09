@@ -19,16 +19,29 @@ interface PerformanceChartProps {
 export const PerformanceChart = ({ data }: PerformanceChartProps) => {
   const theme = useTheme();
 
-  // Transform data for charting - removed unused cashFlow
+  const first = data && data.length > 0 ? data[0] : null;
+  if (!first) {
+    return <Typography>No performance data available</Typography>;
+  }
   const chartData = data.map((item) => ({
     date: format(parseISO(item.date), "MMM dd"),
-    portfolioValue: item.portfolioValue,
-    sp500: item.benchmarkSP500,
-    russell2000: item.benchmarkRussell2000,
-    msciWorld: item.benchmarkMSCIWorld,
+    portfolioValue:
+      ((item.portfolioValue - first.portfolioValue) / first.portfolioValue) *
+      100,
+    sp500:
+      ((item.benchmarkSP500 - first.benchmarkSP500) / first.benchmarkSP500) *
+      100,
+    russell2000:
+      ((item.benchmarkRussell2000 - first.benchmarkRussell2000) /
+        first.benchmarkRussell2000) *
+      100,
+    msciWorld:
+      ((item.benchmarkMSCIWorld - first.benchmarkMSCIWorld) /
+        first.benchmarkMSCIWorld) *
+      100,
   }));
 
-  const formatCurrency = (value: number) => `$${value.toLocaleString()}`;
+  const formatPercent = (value: number) => `${value.toFixed(1)}%`;
 
   return (
     <Box sx={{ height: 400, width: "100%" }}>
@@ -61,11 +74,14 @@ export const PerformanceChart = ({ data }: PerformanceChartProps) => {
           <YAxis
             stroke={theme.palette.text.secondary}
             fontSize={12}
-            tickFormatter={formatCurrency}
+            tickFormatter={formatPercent}
           />
 
           <Tooltip
-            formatter={(value: number) => [formatCurrency(value), "Value"]}
+            formatter={(value: number) => [
+              formatPercent(value as number),
+              "Return",
+            ]}
             labelFormatter={(label) => `Date: ${label}`}
             contentStyle={{
               backgroundColor: theme.palette.background.paper,
