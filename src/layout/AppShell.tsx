@@ -11,6 +11,7 @@ import {
 import { Menu as MenuIcon } from "@mui/icons-material";
 import Sidebar from "./Sidebar";
 import ToastHost from "../components/ToastHost";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 const DRAWER_WIDTH = 240;
 
@@ -82,8 +83,10 @@ const AppShell = () => {
             }}
           />
 
-          {/* Page content */}
-          <Outlet />
+          {/* Page content wrapped in ErrorBoundary */}
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </Box>
       </Box>
 
