@@ -9,8 +9,8 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * @returns Promise resolving to holdings data
  */
 export const getHoldings = async (): Promise<Holding[]> => {
-  // Simulate network delay (300-800ms)
-  await delay(Math.random() * 500 + 300);
+  // Simulate network delay (400-900ms as specified)
+  await delay(Math.random() * 500 + 400);
 
   // Return all holdings
   return sampleHoldings;

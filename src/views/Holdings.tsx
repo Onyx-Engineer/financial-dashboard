@@ -1,22 +1,58 @@
-import {
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
+import React, { useState, useMemo } from "react";
+import { Typography, Box, Card, CardContent } from "@mui/material";
 import { useHoldings } from "../hooks/useHoldings";
+import { HoldingsSkeleton } from "../components/HoldingsSkeleton";
+import { ErrorBanner } from "../components/ErrorBanner";
+import { HoldingsTable } from "../features/holdings/HoldingsTable";
+import { HoldingsFilters } from "../features/holdings/HoldingsFilters";
 
-const Holdings = () => {
-  const { holdings, isLoading, error } = useHoldings();
+const Holdings: React.FC = () => {
+  const { holdings, isLoading, error, refetch } = useHoldings();
+  const [sectorFilter, setSectorFilter] = useState<string>("All");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // Extract unique sectors from holdings
+  const sectors = useMemo(() => {
+    const uniqueSectors = new Set(holdings.map((h) => h.sector));
+    return Array.from(uniqueSectors).sort();
+  }, [holdings]);
+
+  // Filter holdings based on current filters
+  const filteredHoldings = useMemo(() => {
+    return holdings.filter((holding) => {
+      const matchSector =
+        sectorFilter === "All" || holding.sector === sectorFilter;
+      const matchSearch =
+        searchTerm === "" ||
+        holding.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        holding.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      return matchSector && matchSearch;
+    });
+  }, [holdings, sectorFilter, searchTerm]);
+
+  if (isLoading) {
+    return <HoldingsSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <Box>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Holdings
+        </Typography>
+
+        <Typography variant="body1" color="text.secondary" paragraph>
+          View your current portfolio holdings and asset allocation.
+        </Typography>
+
+        <ErrorBanner
+          message="Failed to load holdings. Please try again."
+          onRetry={refetch}
+        />
+      </Box>
+    );
+  }
 
   return (
     <Box>
@@ -28,71 +64,32 @@ const Holdings = () => {
         View your current portfolio holdings and asset allocation.
       </Typography>
 
-      <Card sx={{ mt: 2 }}>
-        <CardContent>
-          <Typography variant="h6" component="h2" gutterBottom>
-            Current Holdings
-          </Typography>
+      <HoldingsFilters
+        sectorFilter={sectorFilter}
+        onSectorChange={setSectorFilter}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onRefresh={refetch}
+        isLoading={isLoading}
+        sectors={sectors}
+      />
 
-          {isLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-              <CircularProgress />
-            </Box>
-          ) : error ? (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              {error.message}
-            </Alert>
-          ) : holdings.length === 0 ? (
-            <Alert severity="info" sx={{ mt: 2 }}>
-              No holdings found.
-            </Alert>
+      <Card>
+        <CardContent>
+          {filteredHoldings.length > 0 ? (
+            <>
+              <Typography variant="h6" component="h2" gutterBottom>
+                Current Holdings ({filteredHoldings.length})
+              </Typography>
+              <HoldingsTable holdings={filteredHoldings} />
+            </>
           ) : (
-            <TableContainer component={Paper} sx={{ mt: 2 }}>
-              <Table aria-label="holdings table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Symbol</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell align="right">Current Value</TableCell>
-                    <TableCell align="right">Shares</TableCell>
-                    <TableCell align="right">Current Price</TableCell>
-                    <TableCell align="right">Total Return (%)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {holdings.map((holding) => (
-                    <TableRow key={holding.symbol}>
-                      <TableCell component="th" scope="row">
-                        {holding.symbol}
-                      </TableCell>
-                      <TableCell>{holding.name}</TableCell>
-                      <TableCell align="right">
-                        ${holding.currentValue.toLocaleString()}
-                      </TableCell>
-                      <TableCell align="right">
-                        {holding.shares.toLocaleString()}
-                      </TableCell>
-                      <TableCell align="right">
-                        ${holding.currentPrice.toFixed(2)}
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{
-                          color:
-                            holding.totalReturnPercent >= 0
-                              ? "success.main"
-                              : "error.main",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {holding.totalReturnPercent > 0 ? "+" : ""}
-                        {holding.totalReturnPercent.toFixed(2)}%
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <>
+              <Typography variant="h6" component="h2" gutterBottom>
+                No Results Found
+              </Typography>
+              <HoldingsTable holdings={filteredHoldings} />
+            </>
           )}
         </CardContent>
       </Card>
