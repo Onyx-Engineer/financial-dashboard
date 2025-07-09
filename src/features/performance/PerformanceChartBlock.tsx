@@ -26,7 +26,7 @@ export const PerformanceChartBlock = ({ data }: PerformanceChartBlockProps) => {
     .filter(
       (item, index, array) =>
         array.findIndex((x) => x.event === item.event) === index
-    ); // Remove duplicates based on event name
+    );
 
   return (
     <Card>

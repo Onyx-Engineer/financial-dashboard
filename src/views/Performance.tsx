@@ -12,13 +12,11 @@ import { ErrorBanner } from "../components/ErrorBanner";
 const Performance = () => {
   const { performanceData, isLoading, error, refetch } = usePerformance();
 
-  // Date range state for filtering - initialize with null values
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
     null,
     null,
   ]);
 
-  // Update date range when data loads - use useEffect instead of useMemo
   useEffect(() => {
     if (performanceData.length > 0 && !dateRange[0] && !dateRange[1]) {
       const firstDate = performanceData[0]?.date;
@@ -27,7 +25,7 @@ const Performance = () => {
         setDateRange([parseISO(firstDate), parseISO(lastDate)]);
       }
     }
-  }, [performanceData]); // Remove dateRange dependency to prevent infinite loops
+  }, [performanceData, dateRange]);
 
   // Filter data based on date range
   const filteredData = useMemo(() => {
