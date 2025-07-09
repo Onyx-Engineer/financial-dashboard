@@ -7,7 +7,7 @@ const Dashboard = () => {
         Dashboard Overview
       </Typography>
 
-      <Typography variant="body1" color="text.secondary" paragraph>
+      <Typography variant="body1" color="text.secondary">
         Welcome to your financial dashboard. View your portfolio performance and
         holdings.
       </Typography>
