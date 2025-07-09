@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getPerformance } from "../api";
+import { notify } from "../services/notification";
 import type { PerformanceData } from "../types/PerformanceData";
 
 interface UsePerformanceResult {
@@ -26,11 +27,12 @@ export const usePerformance = (): UsePerformanceResult => {
       const data = await getPerformance();
       setPerformanceData(data);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err
-          : new Error("Failed to fetch performance data")
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to fetch performance data";
+      setError(err instanceof Error ? err : new Error(errorMessage));
+
+      // Add error notification
+      notify.error(`Failed to load performance data: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }

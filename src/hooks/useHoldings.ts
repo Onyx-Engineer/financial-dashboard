@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getHoldings } from "../api";
+import { notify } from "../services/notification";
 import type { Holding } from "../types/HoldingCompany";
 
 interface UseHoldingsResult {
@@ -26,9 +27,12 @@ export const useHoldings = (): UseHoldingsResult => {
       const data = await getHoldings();
       setHoldings(data);
     } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Failed to fetch holdings")
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to fetch holdings";
+      setError(err instanceof Error ? err : new Error(errorMessage));
+
+      // Add error notification
+      notify.error(`Failed to load holdings: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
