@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./styles/index.css";
 
@@ -42,7 +44,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router} />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <RouterProvider router={router} />
+      </LocalizationProvider>
     </ThemeProvider>
   </StrictMode>
 );
