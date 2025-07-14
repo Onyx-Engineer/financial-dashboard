@@ -122,11 +122,11 @@ Run ESLint to check code quality:
 npm run lint
 ```
 
-# Financial Dashboard – Take-Home Project Review
+# Financial Dashboard Project
 
 ## Intro
 
-This is a review of the take-home financial dashboard project. The core goal was to handle the business requirements: A dashboard with 2 views for Performance Data and Summary of Holdings, with a strong focus on UX.
+This is a review of this financial dashboard project. The core goal was to handle the following business requirements: A dashboard with 2 views for Performance Data and Summary of Holdings, with a strong focus on UX.
 
 The first plan of attack was to conduct a survey of UX patterns and then map them to a scalable project architecture. After research, I saw the following categories:
 
@@ -154,9 +154,11 @@ The overall component structure starts with the:
 - **Holdings component** – Is a table that would contain a user’s holdings in each asset. They can filter table data with functionality by column and also search. With a real API, it would be good to monitor the number of calls being made (using a debounce feature) for performance purposes.
 - **UI** – Used a combination of Material UI and Tailwind CSS. Material UI provides a large prebuilt set of self-contained components, and Tailwind utilities cover most CSS styling requirements.
 
+Review - Future improvements
+
 ## Data Model
 
-I took the data models provided in the file and assigned Holding and Performance Data to TypeScript interfaces for type checking.
+Holding and Performance Data to TypeScript interfaces for type checking.
 
 ## API Layer
 
@@ -170,7 +172,7 @@ Use local component state, like sorting in the Holding component, and Custom hoo
 
 ## Custom Hooks
 
-Create a custom hook to handle data fetching for each view. The notifications for the toasts are emitted from this point. I focused primarily on the unhappy path. The happy path already utilizes different UX indicators of loading and success with the skeleton loading UI.
+Created a custom hook to handle data fetching for each view. The notifications for the toasts are emitted from this point. I focused primarily on the unhappy path. The happy path already utilizes different UX indicators of loading and success with the skeleton loading UI.
 
 ## Layout
 
@@ -187,10 +189,6 @@ As mentioned, Material UI is used with a theme.ts to set global CSS and tailwind
 ## Error Handling
 
 ErrorBoundary catches React errors with a fallback UI. The fallback UI provides functionality to attempt to retry the API request. As mentioned before, there is a Toast system displayed by the notification system.
-
-## Testing
-
-Here, I ran out of time to add a more dense sample of testing. But here I used the common tech stack. Covered the happy and unhappy path of useHoldings hook. Also, tested the retry and loading edge cases. The overall structure set up the mock data and hook to set a return value, trigger it, then assert that it matches the use case.
 
 ## Performance Optimization
 
@@ -210,7 +208,7 @@ Now, I am going to walk through some of the UX design principles used.
 - **User Feedback Loops** – Toast system provides clear feedback, and also Error Fallback provides clarity on error and opportunity to retry a failed page.
 - **KPIs & Metrics Clarity** – uses currency formatting and quick snapshots of key investor metrics.
 
-## Feature Enhancements / Additions
+## Future Enhancements / Additions
 
 - Use WebSockets and socket.io client for real-time data
 - More advanced filtering and search
@@ -221,3 +219,5 @@ Now, I am going to walk through some of the UX design principles used.
 - Ability for the user to set Alerts and Notifications based on certain conditions
 - Code quality tools – test coverage, pre-commit hooks, linting, and prettier
 - Storybook design system so that sharable components can be reused in several applications
+- Improve test coverage
+- Integrate a backend API
